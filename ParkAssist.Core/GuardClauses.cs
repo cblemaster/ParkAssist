@@ -14,6 +14,10 @@
         {
             return str.Length >= min && str.Length <= max;
         }
+        public bool StringLengthInValidRangeExclusive(int min, int max, string str)
+        {
+            return str.Length > min && str.Length < max;
+        }
         public bool IdGreaterThanZero(int id)
         {
             return id > 0;
