@@ -20,7 +20,7 @@ IConfigurationRoot config = new ConfigurationBuilder()
 string connectionString = config.GetConnectionString("Project") ?? "Error retrieving connection string!";
 string jwtSecret = config.GetValue<string>("JwtSecret") ?? "Error retreiving jwt config!";
 
-var key = Encoding.ASCII.GetBytes(jwtSecret);
+byte[] key = Encoding.ASCII.GetBytes(jwtSecret);
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap[JwtRegisteredClaimNames.Sub] = "sub";
 
 builder.Services.AddAuthentication(x =>
@@ -71,7 +71,7 @@ app.MapGet("/Admin/{id:int}", async Task<AdminDTO> (int id, ParkAssistContext co
 app.MapGet("/Admin", async Task<IReadOnlyList<AdminDTO>> (ParkAssistContext context, Mappers mappers) =>
     await Task.Run(() =>
         {
-            List<AdminDTO> dtos = new();
+            List<AdminDTO> dtos = [];
             foreach (Admin admin in context.Admins)
             {
                 if (GuardClauses.IsNotNull<Admin>(admin))
@@ -99,7 +99,7 @@ app.MapGet("/Owner/{id:int}", async Task<OwnerDTO> (int id, ParkAssistContext co
 app.MapGet("/Owner", async Task<IReadOnlyList<OwnerDTO>> (ParkAssistContext context, Mappers mappers) =>
     await Task.Run(() =>
     {
-        List<OwnerDTO> dtos = new();
+        List<OwnerDTO> dtos = [];
         foreach (Owner owner in context.Owners)
         {
             if (GuardClauses.IsNotNull<Owner>(owner))
@@ -127,7 +127,7 @@ app.MapGet("/Customer/{id:int}", async Task<CustomerDTO> (int id, ParkAssistCont
 app.MapGet("/Customer", async Task<IReadOnlyList<CustomerDTO>> (ParkAssistContext context, Mappers mappers) =>
     await Task.Run(() =>
     {
-        List<CustomerDTO> dtos = new();
+        List<CustomerDTO> dtos = [];
         foreach (Customer customer in context.Customers)
         {
             if (GuardClauses.IsNotNull<Customer>(customer))
@@ -155,7 +155,7 @@ app.MapGet("/Valet/{id:int}", async Task<ValetDTO> (int id, ParkAssistContext co
 app.MapGet("/Valet", async Task<IReadOnlyList<ValetDTO>> (ParkAssistContext context, Mappers mappers) =>
     await Task.Run(() =>
     {
-        List<ValetDTO> dtos = new();
+        List<ValetDTO> dtos = [];
         foreach (Valet valet in context.Valets)
         {
             if (GuardClauses.IsNotNull<Valet>(valet))

@@ -1,7 +1,4 @@
-﻿using ParkAssist.API.Models.Entities;
-using System.Collections.ObjectModel;
-
-namespace ParkAssist.API.Models.DTOs
+﻿namespace ParkAssist.API.Models.DTOs
 {
     public class ValetDTO : UserBaseDTO
     {

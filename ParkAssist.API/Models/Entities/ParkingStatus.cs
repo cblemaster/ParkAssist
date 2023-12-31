@@ -4,7 +4,7 @@
     {
         ParkingRequested = 1,
         VehicleParked = 2,
-        PickupRequested = 3,        
+        PickupRequested = 3,
         VehiclePickedUp = 4,
     }
 }
