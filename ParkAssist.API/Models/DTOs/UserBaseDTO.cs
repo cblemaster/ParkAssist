@@ -12,6 +12,6 @@ namespace ParkAssist.API.Models.DTOs
         public required string Email { get; init; }
         public required string Phone { get; init; }
         public required DateTime CreateDate { get; init; }
-        public required DateTime UpdateDate { get; init; }        
+        public required DateTime? UpdateDate { get; init; }        
     }
 }
