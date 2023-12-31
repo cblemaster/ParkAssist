@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using ParkAssist.API.Context;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-var config = new ConfigurationBuilder()
+IConfigurationRoot config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
             .Build();
