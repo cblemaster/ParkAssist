@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParkAssist.Core", "ParkAssi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParkAssist.Security", "ParkAssist.Security\ParkAssist.Security.csproj", "{F878190B-C888-4DAE-9BE8-0E2B36DD3634}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkAssist.API", "ParkAssist.API\ParkAssist.API.csproj", "{ED1C3EE2-02A4-4A05-AA40-205E0A5E6648}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F878190B-C888-4DAE-9BE8-0E2B36DD3634}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F878190B-C888-4DAE-9BE8-0E2B36DD3634}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F878190B-C888-4DAE-9BE8-0E2B36DD3634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED1C3EE2-02A4-4A05-AA40-205E0A5E6648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED1C3EE2-02A4-4A05-AA40-205E0A5E6648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED1C3EE2-02A4-4A05-AA40-205E0A5E6648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED1C3EE2-02A4-4A05-AA40-205E0A5E6648}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
