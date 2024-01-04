@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MoneyTransfer.Security;
 using ParkAssist.API.Context;
+using ParkAssist.API.Models.DTO;
 using ParkAssist.API.Models.Entities;
+using ParkAssist.API.Models.Mappers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -48,16 +50,26 @@ builder.Services.AddDbContext<ParkAssistContext>(options =>
 
 builder.Services
     .AddSingleton<ITokenGenerator>(tk => new JwtGenerator(jwtSecret))
-    .AddSingleton<IPasswordHasher>(ph => new PasswordHasher());
+    .AddSingleton<IPasswordHasher>(ph => new PasswordHasher())
+    .AddSingleton<Mappers>();
 
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
 
-app.MapGet("/Customer/{id:int}", async (int id, ParkAssistContext context) =>
-{
-    return (await context.Customers.SingleOrDefaultAsync(customer => customer.CustomerId == id))!;
-    
-});
+app.MapGet("/Vehicle/{id:int}", async Task<Results<Ok<VehicleDTO>, NotFound>> (ParkAssistContext context, Mappers mapper, int id) =>
+    mapper.MapVehicle<Vehicle>((await context.Vehicles.SingleOrDefaultAsync(vehicle => vehicle.Id == id))!)
+        is VehicleDTO vehicleDTO ? TypedResults.Ok(vehicleDTO) : TypedResults.NotFound()
+);
+
+app.MapGet("/Vehicle", async Task<Results<Ok<IEnumerable<VehicleDTO>>, NotFound>> (ParkAssistContext context, Mappers mapper) =>
+    mapper.MapVehicles<IEnumerable<Vehicle>>(await context.Vehicles.ToListAsync()) 
+        is IEnumerable<VehicleDTO> vehicleCollection ? TypedResults.Ok(vehicleCollection) : TypedResults.NotFound()
+);
+
+app.MapGet("/Vehicle/User/{userId:int}", async Task<Results<Ok<IEnumerable<VehicleDTO>>, NotFound>> (ParkAssistContext context, Mappers mapper, int userId) =>
+    mapper.MapVehicles<IEnumerable<Vehicle>>(await context.Vehicles.Where(vehicle => vehicle.Customer.UserId == userId).ToListAsync())
+        is IEnumerable<VehicleDTO> vehicleCollection ? TypedResults.Ok(vehicleCollection) : TypedResults.NotFound()
+);
 
 app.Run();
