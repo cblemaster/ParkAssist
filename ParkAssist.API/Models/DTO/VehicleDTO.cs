@@ -14,7 +14,7 @@
         public required DateTime CreateDate { get; init; }
         public DateTime? UpdateDate { get; init; }
         public required string CustomerUsername { get; init; }
-        public required string CustomerFirstName { get; init;}
+        public required string CustomerFirstName { get; init; }
         public required string CustomerFullName { get; init; }
         public required string CustomerEmail { get; init; }
         public required string CustomerPhone { get; init; }

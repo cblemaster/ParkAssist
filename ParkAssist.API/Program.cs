@@ -63,7 +63,7 @@ app.MapGet("/Vehicle/{id:int}", async Task<Results<Ok<VehicleDTO>, NotFound>> (P
 );
 
 app.MapGet("/Vehicle", async Task<Results<Ok<IEnumerable<VehicleDTO>>, NotFound>> (ParkAssistContext context, Mappers mapper) =>
-    mapper.MapVehicles<IEnumerable<Vehicle>>(await context.Vehicles.ToListAsync()) 
+    mapper.MapVehicles<IEnumerable<Vehicle>>(await context.Vehicles.ToListAsync())
         is IEnumerable<VehicleDTO> vehicleCollection ? TypedResults.Ok(vehicleCollection) : TypedResults.NotFound()
 );
 

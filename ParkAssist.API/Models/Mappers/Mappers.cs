@@ -5,17 +5,12 @@ namespace ParkAssist.API.Models.Mappers
 {
     public class Mappers
     {
-        public VehicleDTO? MapVehicle<T>(Vehicle vehicle) where T : Vehicle
-        {
-            if (vehicle == null) { return null; }
-            
-            return MapVehicleEntityToVehicleDTO(vehicle);
-        }
+        public VehicleDTO? MapVehicle<T>(Vehicle vehicle) where T : Vehicle => vehicle == null ? null : MapVehicleEntityToVehicleDTO(vehicle);
 
         public IEnumerable<VehicleDTO>? MapVehicles<T>(IEnumerable<Vehicle> vehicles) where T : IEnumerable<Vehicle>
         {
             if (vehicles == null) { return null; }
-            
+
             List<VehicleDTO> dtoList = [];
             foreach (Vehicle vehicle in vehicles)
             {
