@@ -72,4 +72,19 @@ app.MapGet("/Vehicle/User/{userId:int}", async Task<Results<Ok<IEnumerable<Vehic
         is IEnumerable<VehicleDTO> vehicleCollection ? TypedResults.Ok(vehicleCollection) : TypedResults.NotFound()
 );
 
+app.MapGet("/Valet/{id:int}", async Task<Results<Ok<ValetDTO>, NotFound>> (ParkAssistContext context, Mappers mapper, int id) =>
+    mapper.MapValet<Valet>((await context.Valets.SingleOrDefaultAsync(valet => valet.ValetId == id))!)
+        is ValetDTO valetDTO ? TypedResults.Ok(valetDTO) : TypedResults.NotFound()
+);
+
+app.MapGet("/Valet", async Task<Results<Ok<IEnumerable<ValetDTO>>, NotFound>> (ParkAssistContext context, Mappers mapper) =>
+    mapper.MapValets<IEnumerable<Valet>>(await context.Valets.ToListAsync())
+        is IEnumerable<ValetDTO> valetCollection ? TypedResults.Ok(valetCollection) : TypedResults.NotFound()
+);
+
+app.MapGet("/Valet/ParkingLot/{parkingLotId:int}", async Task<Results<Ok<IEnumerable<ValetDTO>>, NotFound>> (ParkAssistContext context, Mappers mapper, int parkingLotId) =>
+    mapper.MapValets<IEnumerable<Valet>>(await context.Valets.Where(valet => valet.ParkingLotId == parkingLotId).ToListAsync())
+        is IEnumerable<ValetDTO> valetCollection ? TypedResults.Ok(valetCollection) : TypedResults.NotFound()
+);
+
 app.Run();

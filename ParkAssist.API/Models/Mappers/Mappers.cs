@@ -19,6 +19,20 @@ namespace ParkAssist.API.Models.Mappers
             return dtoList.AsReadOnly();
         }
 
+        public ValetDTO? MapValet<T>(Valet valet) where T : Valet => valet == null ? null : MapValetEntityToValetDTO(valet);
+
+        public IEnumerable<ValetDTO>? MapValets<T>(IEnumerable<Valet> valets) where T : IEnumerable<Valet>
+        {
+            if (valets == null) { return null; }
+
+            List<ValetDTO> dtoList = [];
+            foreach (Valet valet in valets)
+            {
+                dtoList.Add(MapValetEntityToValetDTO(valet));
+            }
+            return dtoList.AsReadOnly();
+        }
+
         private static VehicleDTO MapVehicleEntityToVehicleDTO(Vehicle vehicle) => new()
         {
             Id = vehicle.Id,
@@ -37,6 +51,23 @@ namespace ParkAssist.API.Models.Mappers
             CustomerFullName = vehicle.Customer.User.FullName,
             CustomerEmail = vehicle.Customer.User.Email,
             CustomerPhone = vehicle.Customer.User.Phone,
+        };
+
+        private static ValetDTO MapValetEntityToValetDTO(Valet valet) => new()
+        {
+            ValetId = valet.ValetId,
+            UserId = valet.UserId,
+            ParkingLotId = valet.ParkingLotId,
+            ParkingLotName = valet.ParkingLot.Name,
+            ParkingLotAddress = valet.ParkingLot.Address,
+            ParkingLotCity = valet.ParkingLot.City,
+            ParkingLotState = valet.ParkingLot.State,
+            ParkingLotZip = valet.ParkingLot.Zip,
+            ValetUsername = valet.User.Username,
+            ValetFirstName = valet.User.FirstName,
+            ValetFullName = valet.User.FullName,
+            ValetEmail = valet.User.Email,
+            ValetPhone = valet.User.Phone,
         };
     }
 }
