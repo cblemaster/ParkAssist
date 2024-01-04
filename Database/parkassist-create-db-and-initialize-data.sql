@@ -296,42 +296,43 @@ CREATE TABLE Vehicles (
 	Model				varchar(100)						NOT NULL,
 	[Year]				varchar(4)							NOT NULL,
 	LicensePlate		varchar(6)							NOT NULL,
+	StateLicensedIn		varchar(2)							NOT NULL,
 	Color				varchar(100)						NOT NULL,
 	CreateDate			datetime							NOT NULL,
 	UpdateDate			datetime							NULL,
 	CONSTRAINT PK_Vehicles PRIMARY KEY(Id),
 	CONSTRAINT FK_Vehicles_Customers FOREIGN KEY(CustomerId) REFERENCES Customers(CustomerId),
-	CONSTRAINT UC_LicensePlate UNIQUE(LicensePlate),
+	CONSTRAINT UC_LicensePlate UNIQUE(LicensePlate, StateLicensedIn),
 )
 GO
 
 -- optional sample data
-INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, Color, CreateDate, UpdateDate)
-	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'bernice'), 'Nissan', 'Altima', '2015', 'AAA111', 'Black', GETDATE(), NULL);
+INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, StateLicensedIn, Color, CreateDate, UpdateDate)
+	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'bernice'), 'Nissan', 'Altima', '2015', 'AAA111', 'KY', 'Black', GETDATE(), NULL);
 
-INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, Color, CreateDate, UpdateDate)
-	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'bernice'), 'Subaru', 'Forester', '2019', 'BBB222', 'Silver', GETDATE(), NULL);
+INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, StateLicensedIn, Color, CreateDate, UpdateDate)
+	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'bernice'), 'Subaru', 'Forester', '2019', 'BBB222', 'KY', 'Silver', GETDATE(), NULL);
 
-INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, Color, CreateDate, UpdateDate)
-	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'brian'), 'Mazda', 'CX-5', '2018', 'CCC333', 'Black', GETDATE(), NULL);
+INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, StateLicensedIn, Color, CreateDate, UpdateDate)
+	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'brian'), 'Mazda', 'CX-5', '2018', 'CCC333', 'OH', 'Black', GETDATE(), NULL);
 
-INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, Color, CreateDate, UpdateDate)
-	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'brian'), 'Toyota', 'Highlander', '2020', 'DDD444', 'Blue', GETDATE(), NULL);
+INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, StateLicensedIn, Color, CreateDate, UpdateDate)
+	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'brian'), 'Toyota', 'Highlander', '2020', 'DDD444', 'OH', 'Blue', GETDATE(), NULL);
 
-INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, Color, CreateDate, UpdateDate)
-	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'brian'), 'Honda', 'Civic', '2023', 'EEE555', 'Gray', GETDATE(), NULL);
+INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, StateLicensedIn, Color, CreateDate, UpdateDate)
+	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'brian'), 'Honda', 'Civic', '2023', 'EEE555', 'OH', 'Gray', GETDATE(), NULL);
 
-INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, Color, CreateDate, UpdateDate)
-	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'oscar'), 'Kia', 'Sportage', '2024', 'FFF666', 'Red', GETDATE(), NULL);
+INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, StateLicensedIn, Color, CreateDate, UpdateDate)
+	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'oscar'), 'Kia', 'Sportage', '2024', 'AAA111', 'OH', 'Red', GETDATE(), NULL);
 
-INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, Color, CreateDate, UpdateDate)
-	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'oscar'), 'Ford', 'Ranger', '2009', 'GGG777', 'Green', GETDATE(), NULL);
+INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, StateLicensedIn, Color, CreateDate, UpdateDate)
+	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'oscar'), 'Ford', 'Ranger', '2009', 'GGG777', 'OH', 'Green', GETDATE(), NULL);
 
-INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, Color, CreateDate, UpdateDate)
-	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'wanda'), 'Mazda', 'CX-90', '2024', 'HHH888', 'Blue', GETDATE(), NULL);
+INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, StateLicensedIn, Color, CreateDate, UpdateDate)
+	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'wanda'), 'Mazda', 'CX-90', '2024', 'HHH888', 'IN', 'Blue', GETDATE(), NULL);
 
-INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, Color, CreateDate, UpdateDate)
-	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'wanda'), 'Suzuki', 'Esteem', '2007', 'III999', 'Yellow', GETDATE(), NULL);
+INSERT INTO Vehicles(CustomerId, Make, Model, [Year], LicensePlate, StateLicensedIn, Color, CreateDate, UpdateDate)
+	VALUES((SELECT c.CustomerId FROM Customers c INNER JOIN Users u ON (c.UserId = u.UserId) WHERE u.Username = 'wanda'), 'Suzuki', 'Esteem', '2007', 'III999', 'IN', 'Yellow', GETDATE(), NULL);
 --
 
 CREATE TABLE ParkingStatuses (

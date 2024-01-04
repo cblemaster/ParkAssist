@@ -220,7 +220,7 @@ public partial class ParkAssistContext : DbContext
 
         modelBuilder.Entity<Vehicle>(entity =>
         {
-            entity.HasIndex(e => e.LicensePlate, "UC_LicensePlate").IsUnique();
+            entity.HasIndex(e => new { e.LicensePlate, e.StateLicensedIn }, "UC_LicensePlate").IsUnique();
 
             entity.Property(e => e.Color)
                 .HasMaxLength(100)
@@ -238,6 +238,9 @@ public partial class ParkAssistContext : DbContext
             entity.Property(e => e.UpdateDate).HasColumnType("datetime");
             entity.Property(e => e.Year)
                 .HasMaxLength(4)
+                .IsUnicode(false);
+            entity.Property(e => e.StateLicensedIn)
+                .HasMaxLength(2)
                 .IsUnicode(false);
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Vehicles)

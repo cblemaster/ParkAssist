@@ -14,6 +14,8 @@ public partial class Vehicle
 
     public string LicensePlate { get; set; } = null!;
 
+    public string StateLicensedIn { get; set; } = null!;
+
     public string Color { get; set; } = null!;
 
     public DateTime CreateDate { get; set; }
