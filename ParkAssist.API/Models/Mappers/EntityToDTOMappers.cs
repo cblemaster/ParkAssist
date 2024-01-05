@@ -13,8 +13,19 @@ namespace ParkAssist.API.Models.Mappers
                     CustomerId = customer.CustomerId,
                     UserId = customer.UserId,
                     User = MapUser(customer.User)!,
-                    Vehicles = MapVehicles(customer.Vehicles),
                 };
+
+        public static ReadOnlyCollection<CustomerDTO>? MapCustomers(IEnumerable<Customer> customers)
+        {
+            if (customers == null) { return null; }
+
+            List<CustomerDTO> dtoList = [];
+            foreach (Customer customer in customers)
+            {
+                dtoList.Add(MapCustomer(customer)!);
+            }
+            return dtoList.AsReadOnly();
+        }
 
         public static DiscountDTO? MapDiscount(Discount discount) => discount == null
                 ? null
@@ -26,6 +37,18 @@ namespace ParkAssist.API.Models.Mappers
                     Multiplier = discount.Multiplier,
                 };
 
+        public static ReadOnlyCollection<DiscountDTO>? MapDiscounts(IEnumerable<Discount> discounts)
+        {
+            if (discounts == null) { return null; }
+
+            List<DiscountDTO> dtoList = [];
+            foreach (Discount discount in discounts)
+            {
+                dtoList.Add(MapDiscount(discount)!);
+            }
+            return dtoList.AsReadOnly();
+        }
+
         public static OwnerDTO? MapOwner(Owner owner) => owner == null
                 ? null
                 : new()
@@ -33,8 +56,19 @@ namespace ParkAssist.API.Models.Mappers
                     OwnerId = owner.OwnerId,
                     UserId = owner.UserId,
                     User = MapUser(owner.User)!,
-                    ParkingLots = MapParkingLots(owner.ParkingLots),
                 };
+
+        public static ReadOnlyCollection<OwnerDTO>? MapOwners(IEnumerable<Owner> owners)
+        {
+            if (owners == null) { return null; }
+
+            List<OwnerDTO> dtoList = [];
+            foreach (Owner owner in owners)
+            {
+                dtoList.Add(MapOwner(owner)!);
+            }
+            return dtoList.AsReadOnly();
+        }
 
         public static ParkingLotDTO? MapParkingLot(ParkingLot parkingLot) => parkingLot == null
                 ? null
@@ -64,6 +98,39 @@ namespace ParkAssist.API.Models.Mappers
             foreach (ParkingLot parkingLot in parkingLots)
             {
                 dtoList.Add(MapParkingLot(parkingLot)!);
+            }
+            return dtoList.AsReadOnly();
+        }
+
+        public static ParkingSlipDTO? MapParkingSlip(ParkingSlip parkingSlip) => parkingSlip == null
+                ? null
+                : new()
+                {
+                    Id = parkingSlip.Id,
+                    ValetId = parkingSlip.ValetId,
+                    VehicleId = parkingSlip.VehicleId,
+                    ParkingStatus = parkingSlip.ParkingStatus.ToString(),
+                    ParkingSpotId = parkingSlip.ParkingSpotId,
+                    TimeIn = parkingSlip.TimeIn,
+                    TimeOut = parkingSlip.TimeOut,
+                    AmountDue = parkingSlip.AmountDue,
+                    AmountPaid = parkingSlip.AmountPaid,
+                    CreateDate = parkingSlip.CreateDate,
+                    UpdateDate = parkingSlip.UpdateDate,
+                    ParkingSpot = MapParkingSpot(parkingSlip.ParkingSpot!),
+                    Valet = MapValet(parkingSlip.Valet!),
+                    Vehicle = MapVehicle(parkingSlip.Vehicle)!,
+                    Discounts = MapDiscounts(parkingSlip.Discounts)!,
+                };
+
+        public static ReadOnlyCollection<ParkingSlipDTO>? MapParkingSlips(IEnumerable<ParkingSlip> parkingSlips)
+        {
+            if (parkingSlips == null) { return null; }
+
+            List<ParkingSlipDTO> dtoList = [];
+            foreach (ParkingSlip parkingSlip in parkingSlips)
+            {
+                dtoList.Add(MapParkingSlip(parkingSlip)!);
             }
             return dtoList.AsReadOnly();
         }
@@ -116,6 +183,18 @@ namespace ParkAssist.API.Models.Mappers
                     UpdateDate = user.UpdateDate,
                 };
 
+        public static ReadOnlyCollection<UserDTO>? MapUsers(IEnumerable<User> users)
+        {
+            if (users == null) { return null; }
+
+            List<UserDTO> dtoList = [];
+            foreach (User user in users)
+            {
+                dtoList.Add(MapUser(user)!);
+            }
+            return dtoList.AsReadOnly();
+        }
+
         public static ValetDTO? MapValet(Valet valet) => valet == null
                 ? null
                 : new()
@@ -124,7 +203,6 @@ namespace ParkAssist.API.Models.Mappers
                     UserId = valet.UserId,
                     ParkingLotId = valet.ParkingLotId,
                     User = MapUser(valet.User)!,
-                    ParkingLot = MapParkingLot(valet.ParkingLot)!,
                 };
 
         public static ReadOnlyCollection<ValetDTO>? MapValets(IEnumerable<Valet> valets)

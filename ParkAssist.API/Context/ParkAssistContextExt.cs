@@ -12,15 +12,16 @@ namespace ParkAssist.API.Context
 
             modelBuilder.Entity<Customer>(entity => entity.Navigation<User>(nav => nav.User).AutoInclude());
             modelBuilder.Entity<Owner>(entity => entity.Navigation<User>(nav => nav.User).AutoInclude());
-            //modelBuilder.Entity<Valet>(entity => entity.Navigation<User>(nav => nav.User).AutoInclude());
-            //modelBuilder.Entity<Valet>(entity => entity.Navigation<ParkingLot>(nav => nav.ParkingLot).AutoInclude());
             modelBuilder.Entity<ParkingLot>(entity => entity.Navigation<Owner>(nav => nav.Owner).AutoInclude());
             modelBuilder.Entity<ParkingLot>(entity => entity.Navigation<PricingSchedule>(nav => nav.PricingSchedule).AutoInclude());
-            modelBuilder.Entity<ParkingSpot>(entity => entity.Navigation<ParkingLot>(nav => nav.ParkingLot).AutoInclude());
-            modelBuilder.Entity<Vehicle>(entity => entity.Navigation<Customer>(nav => nav.Customer).AutoInclude());
+            modelBuilder.Entity<ParkingLot>(entity => entity.Navigation<ParkingSpot>(nav => nav.ParkingSpots).AutoInclude());
+            modelBuilder.Entity<ParkingLot>(entity => entity.Navigation<Valet>(nav => nav.Valets).AutoInclude());
             modelBuilder.Entity<ParkingSlip>(entity => entity.Navigation<ParkingSpot>(nav => nav.ParkingSpot).AutoInclude());
             modelBuilder.Entity<ParkingSlip>(entity => entity.Navigation<Valet>(nav => nav.Valet).AutoInclude());
             modelBuilder.Entity<ParkingSlip>(entity => entity.Navigation<Vehicle>(nav => nav.Vehicle).AutoInclude());
+            modelBuilder.Entity<ParkingSlip>(entity => entity.Navigation<Discount>(nav => nav.Discounts).AutoInclude());
+            modelBuilder.Entity<Valet>(entity => entity.Navigation<User>(nav => nav.User).AutoInclude());
+            modelBuilder.Entity<Vehicle>(entity => entity.Navigation<Customer>(nav => nav.Customer).AutoInclude());
         }
     }
 }

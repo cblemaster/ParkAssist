@@ -6,6 +6,5 @@
         public required int UserId { get; init; }
         public required int ParkingLotId { get; init; }
         public required UserDTO User {  get; init; }
-        public required ParkingLotDTO ParkingLot { get; init; }
     }
 }
