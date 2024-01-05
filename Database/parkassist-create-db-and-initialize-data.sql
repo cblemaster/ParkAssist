@@ -373,10 +373,10 @@ INSERT INTO Discounts (Type,Description,Multiplier) VALUES ('Student','Discount 
 
 CREATE TABLE ParkingSlips (
 	Id					int IDENTITY(1,1)					NOT NULL,
-	ValetId				int									NOT NULL,
+	ValetId				int									NULL,
 	VehicleId			int									NOT NULL,
 	ParkingStatusId		int									NOT NULL,
-	ParkingSpotId		int									NOT NULL,
+	ParkingSpotId		int									NULL,
 	TimeIn				datetime							NOT NULL,
 	TimeOut				datetime							NULL,
 	AmountDue			decimal(13,2)						NULL,

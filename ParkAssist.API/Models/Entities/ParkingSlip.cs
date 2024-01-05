@@ -4,13 +4,13 @@ public partial class ParkingSlip
 {
     public int Id { get; set; }
 
-    public int ValetId { get; set; }
+    public int? ValetId { get; set; }
 
     public int VehicleId { get; set; }
 
     public int ParkingStatusId { get; set; }
 
-    public int ParkingSpotId { get; set; }
+    public int? ParkingSpotId { get; set; }
 
     public DateTime TimeIn { get; set; }
 
@@ -24,9 +24,9 @@ public partial class ParkingSlip
 
     public DateTime? UpdateDate { get; set; }
 
-    public virtual ParkingSpot ParkingSpot { get; set; } = null!;
+    public virtual ParkingSpot? ParkingSpot { get; set; }
 
-    public virtual Valet Valet { get; set; } = null!;
+    public virtual Valet? Valet { get; set; }
 
     public virtual Vehicle Vehicle { get; set; } = null!;
 
