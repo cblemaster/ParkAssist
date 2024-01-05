@@ -391,6 +391,20 @@ CREATE TABLE ParkingSlips (
 )
 GO
 
+-- optional data
+INSERT INTO ParkingSlips(ValetId, VehicleId, ParkingStatusId, ParkingSpotId, TimeIn, TimeOut, AmountDue, AmountPaid, CreateDate, UpdateDate)
+	VALUES (1, 5, (SELECT ps.Id FROM ParkingStatuses ps WHERE ps.ParkingStatus = 'VehiclePickedUp'), 7, DATETIMEFROMPARTS(2023, 11, 14, 2, 13, 11, 965), DATETIMEFROMPARTS(2023, 11, 14, 4, 47, 52, 12), 12.45, 12.45, DATETIMEFROMPARTS(2023, 11, 14, 0, 0, 0, 0), NULL);
+
+INSERT INTO ParkingSlips(ValetId, VehicleId, ParkingStatusId, ParkingSpotId, TimeIn, TimeOut, AmountDue, AmountPaid, CreateDate, UpdateDate)
+	VALUES (2, 2, (SELECT ps.Id FROM ParkingStatuses ps WHERE ps.ParkingStatus = 'VehicleParked'), 18, DATETIMEFROMPARTS(2024, 1, 4, 20, 37, 23, 239), NULL, NULL, NULL, DATETIMEFROMPARTS(2024, 1, 4, 0, 0, 0, 0), NULL);
+
+INSERT INTO ParkingSlips(ValetId, VehicleId, ParkingStatusId, ParkingSpotId, TimeIn, TimeOut, AmountDue, AmountPaid, CreateDate, UpdateDate)
+	VALUES (1, 8, (SELECT ps.Id FROM ParkingStatuses ps WHERE ps.ParkingStatus = 'PickupRequested'), 3, DATETIMEFROMPARTS(2024, 1, 4, 18, 14, 07, 818), NULL, NULL, NULL, DATETIMEFROMPARTS(2024, 1, 4, 0, 0, 0, 0), NULL);
+
+INSERT INTO ParkingSlips(ValetId, VehicleId, ParkingStatusId, ParkingSpotId, TimeIn, TimeOut, AmountDue, AmountPaid, CreateDate, UpdateDate)
+	VALUES (NULL, 4, (SELECT ps.Id FROM ParkingStatuses ps WHERE ps.ParkingStatus = 'ParkingRequested'), NULL, DATETIMEFROMPARTS(2024, 1, 4, 20, 41, 13, 666), NULL, NULL, NULL, DATETIMEFROMPARTS(2024, 1, 4, 0, 0, 0, 0), NULL);
+--
+
 CREATE TABLE ParkingSlipsDiscounts (
 	ParkingSlipId		int									NOT NULL,
 	DiscountId			int									NOT NULL,
@@ -399,3 +413,7 @@ CREATE TABLE ParkingSlipsDiscounts (
 	CONSTRAINT FK_ParkingSlipsDiscounts_Discounts FOREIGN KEY(DiscountId) REFERENCES Discounts(Id),
 )
 GO
+
+-- optional data
+INSERT INTO ParkingSlipsDiscounts(ParkingSlipId, DiscountId) VALUES ((SELECT TOP 1 ps.Id FROM ParkingSlips ps ORDER BY ps.Id), 1);
+INSERT INTO ParkingSlipsDiscounts(ParkingSlipId, DiscountId) VALUES ((SELECT TOP 1 ps.Id FROM ParkingSlips ps ORDER BY ps.Id), 2);
