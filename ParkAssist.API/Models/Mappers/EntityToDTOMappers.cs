@@ -140,7 +140,7 @@ namespace ParkAssist.API.Models.Mappers
                 : new()
                 {
                     Id = parkingSpot.Id,
-                    ParkingLotId = parkingSpot.Id,
+                    ParkingLotId = parkingSpot.ParkingLotId,
                     Name = parkingSpot.Name,
                     CreateDate = parkingSpot.CreateDate,
                     UpdateDate = parkingSpot.UpdateDate,
