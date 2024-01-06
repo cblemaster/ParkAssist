@@ -18,7 +18,7 @@ namespace MoneyTransfer.Security
         public PasswordHash ComputeHash(string plainTextPassword)
         {
             //Create the hashing provider
-            Rfc2898DeriveBytes rfc = new(plainTextPassword, 8, WorkFactor);
+            Rfc2898DeriveBytes rfc = new(plainTextPassword, 8, WorkFactor, HashAlgorithmName.SHA256);
 
             //Get the Hashed Password
             byte[] hash = rfc.GetBytes(20);
@@ -42,7 +42,7 @@ namespace MoneyTransfer.Security
             byte[] saltArray = Convert.FromBase64String(salt);      //gets us the byte[] array representation
 
             //Create the hashing provider
-            Rfc2898DeriveBytes rfc = new(plainTextPassword, saltArray, WorkFactor);
+            Rfc2898DeriveBytes rfc = new(plainTextPassword, saltArray, WorkFactor, HashAlgorithmName.SHA256);
 
             //Get the hashed password
             byte[] hash = rfc.GetBytes(20);

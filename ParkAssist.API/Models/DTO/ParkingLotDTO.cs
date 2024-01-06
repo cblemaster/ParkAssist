@@ -9,7 +9,7 @@
         public required string Address { get; init; }
         public required string City { get; init; }
         public required string State { get; init; }
-        public required string Zip { get; init;}
+        public required string Zip { get; init; }
         public required DateTime CreateDate { get; init; }
         public DateTime? UpdateDate { get; init; }
         public required OwnerDTO Owner { get; init; }

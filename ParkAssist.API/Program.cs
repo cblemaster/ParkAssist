@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MoneyTransfer.Security;
@@ -73,7 +72,7 @@ app.MapGet("/Customer", async Task<Results<Ok<IEnumerable<CustomerDTO>>, NotFoun
 app.MapPost("/LogIn", async Task<Results<BadRequest<string>, UnauthorizedHttpResult, Created<UserDTO>>> (ParkAssistContext context, IPasswordHasher passwordHasher, ITokenGenerator tokenGenerator, LogInUserDTO logInUser) =>
 {
     if (logInUser is null || !(DTOValidators.LogInUserDTOIsValid(logInUser))) { return TypedResults.BadRequest("invalid username or password input"); }
-    
+
     User existingUser = (await context.Users.SingleOrDefaultAsync(user => user.Username == logInUser.Username))!;
 
     if (existingUser == null || existingUser.UserId < 1) { return TypedResults.BadRequest("matching user not found"); }
@@ -126,9 +125,9 @@ app.MapGet("/ParkingSlip", async Task<Results<Ok<IEnumerable<ParkingSlipDTO>>, N
 
 app.MapPost("/Register", async Task<Results<BadRequest<string>, Conflict<string>, Created<UserDTO>>> (ParkAssistContext context, IPasswordHasher passwordHasher, RegisterUserDTO registerUser) =>
 {
-    (bool IsValid, string ErrorMessage) validator = DTOValidators.RegisterUserDTOIsValid(registerUser);
-    if (registerUser is null || !validator.IsValid) { return TypedResults.BadRequest(validator.ErrorMessage); }
-    
+    (bool IsValid, string ErrorMessage) = DTOValidators.RegisterUserDTOIsValid(registerUser);
+    if (registerUser is null || !IsValid) { return TypedResults.BadRequest(ErrorMessage); }
+
     User existingUser = (await context.Users.SingleOrDefaultAsync(user => user.Username == registerUser.Username))!;
     if (existingUser != null && existingUser.UserId > 0)
     {
@@ -146,7 +145,7 @@ app.MapPost("/Register", async Task<Results<BadRequest<string>, Conflict<string>
         LastName = registerUser.LastName,
         Email = registerUser.Email,
         Phone = registerUser.Phone,
-        CreateDate = DateTime.Today,        
+        CreateDate = DateTime.Today,
     };
 
     if (registerUser.Role == "customer")
@@ -172,7 +171,7 @@ app.MapPost("/Register", async Task<Results<BadRequest<string>, Conflict<string>
 
     context.Users.Add(addUser);
     await context.SaveChangesAsync();
-    
+
     UserDTO returnUser = EntityToDTOMappers.MapUser(addUser)!;
     return TypedResults.Created($"/User/{returnUser.UserId}", returnUser);
 });
