@@ -45,7 +45,9 @@ builder.Services.AddAuthentication(x =>
 });
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("requireauthuser", policy => policy.RequireAuthenticatedUser());
+    .AddPolicy("requirecustomer", policy => policy.RequireRole("customer").RequireAuthenticatedUser())
+    .AddPolicy("requirevalet", policy => policy.RequireRole("valet").RequireAuthenticatedUser())
+    .AddPolicy("requireowner", policy => policy.RequireRole("owner").RequireAuthenticatedUser());
 
 builder.Services.AddDbContext<ParkAssistContext>(options =>
     options.UseSqlServer(connectionString));
@@ -82,7 +84,7 @@ app.MapPost("/LogIn", async Task<Results<BadRequest<string>, UnauthorizedHttpRes
     }
     else
     {
-        string token = tokenGenerator.GenerateToken(existingUser.UserId, existingUser.Username);
+        string token = tokenGenerator.GenerateToken(existingUser.UserId, existingUser.Username, logInUser.Role);
 
         UserDTO returnUser = EntityToDTOMappers.MapUser(existingUser)!;
 

@@ -9,8 +9,6 @@ namespace MoneyTransfer.Security
     {
         private readonly string JwtSecret = secret;
 
-        public string GenerateToken(int userId, string username) => GenerateToken(userId, username, string.Empty);
-
         public string GenerateToken(int userId, string username, string role)
         {
             List<Claim> claims = new()
