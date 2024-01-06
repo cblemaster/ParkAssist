@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ParkAssist.Core\ParkAssist.Core.csproj" />
     <ProjectReference Include="..\ParkAssist.Security\ParkAssist.Security.csproj" />
   </ItemGroup>
 

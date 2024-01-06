@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MoneyTransfer.Security;
@@ -7,6 +8,7 @@ using ParkAssist.API.Context;
 using ParkAssist.API.Models.DTO;
 using ParkAssist.API.Models.Entities;
 using ParkAssist.API.Models.Mappers;
+using ParkAssist.API.Models.Validation;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -66,6 +68,30 @@ app.MapGet("/Customer", async Task<Results<Ok<IEnumerable<CustomerDTO>>, NotFoun
         is IEnumerable<CustomerDTO> customers ? TypedResults.Ok(customers) : TypedResults.NotFound()
 );
 
+app.MapPost("/LogIn", async Task<Results<BadRequest<string>, UnauthorizedHttpResult, Ok<UserDTO>>> (ParkAssistContext context, IPasswordHasher passwordHasher, ITokenGenerator tokenGenerator, LogInUserDTO logInUser) =>
+{
+    if (logInUser is null || !(DTOValidators.LogInUserDTOIsValid(logInUser))) { return TypedResults.BadRequest("invalid username or password input"); }
+    
+    User existingUser = (await context.Users.SingleOrDefaultAsync(user => user.Username == logInUser.Username))!;
+
+    if (existingUser == null || existingUser.UserId < 1) { return TypedResults.BadRequest("matching user not found"); }
+
+    if (!passwordHasher.VerifyHashMatch(existingUser.PasswordHash, logInUser.Password, existingUser.Salt))
+    {
+        return TypedResults.Unauthorized();
+    }
+    else
+    {
+        string token = tokenGenerator.GenerateToken(existingUser.UserId, existingUser.Username);
+
+        UserDTO returnUser = EntityToDTOMappers.MapUser(existingUser)!;
+
+        returnUser.Token = token;
+
+        return TypedResults.Ok(returnUser);
+    }
+});
+
 app.MapGet("/Owner/{id:int}", async Task<Results<Ok<OwnerDTO>, NotFound>> (ParkAssistContext context, int id) =>
     EntityToDTOMappers.MapOwner((await context.Owners.SingleOrDefaultAsync(owner => owner.OwnerId == id))!)
         is OwnerDTO owner ? TypedResults.Ok(owner) : TypedResults.NotFound()
@@ -95,6 +121,37 @@ app.MapGet("/ParkingSlip", async Task<Results<Ok<IEnumerable<ParkingSlipDTO>>, N
     EntityToDTOMappers.MapParkingSlips(await context.ParkingSlips.ToListAsync())
         is IEnumerable<ParkingSlipDTO> parkingSlips ? TypedResults.Ok(parkingSlips) : TypedResults.NotFound()
 );
+
+app.MapPost("/Register", async Task<Results<BadRequest<string>, Conflict<string>, Created<UserDTO>>> (ParkAssistContext context, IPasswordHasher passwordHasher, RegisterUserDTO registerUser) =>
+{
+    if (registerUser is null || !(DTOValidators.RegisterUserDTOIsValid(registerUser))) { return TypedResults.BadRequest("invalid username, password, first name, last name, email, or phone input"); }
+    
+    User existingUser = (await context.Users.SingleOrDefaultAsync(user => user.Username == registerUser.Username))!;
+    if (existingUser != null && existingUser.UserId > 0)
+    {
+        return TypedResults.Conflict("username already taken; choose a different username");
+    }
+
+    PasswordHash hash = passwordHasher.ComputeHash(registerUser.Password);
+
+    User addUser = new()
+    {
+        Username = registerUser.Username,
+        PasswordHash = hash.Password,
+        Salt = hash.Salt,
+        FirstName = registerUser.FirstName,
+        LastName = registerUser.LastName,
+        Email = registerUser.Email,
+        Phone = registerUser.Phone,
+        CreateDate = DateTime.Today,        
+    };
+
+    context.Users.Add(addUser);
+    await context.SaveChangesAsync();
+    
+    UserDTO returnUser = EntityToDTOMappers.MapUser(addUser)!;
+    return TypedResults.Created($"/User/{returnUser.UserId}", returnUser);
+});
 
 app.MapGet("/User/{id:int}", async Task<Results<Ok<UserDTO>, NotFound>> (ParkAssistContext context, int id) =>
     EntityToDTOMappers.MapUser((await context.Users.SingleOrDefaultAsync(user => user.UserId == id))!)
