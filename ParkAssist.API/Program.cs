@@ -70,7 +70,7 @@ app.MapGet("/Customer", async Task<Results<Ok<IEnumerable<CustomerDTO>>, NotFoun
         is IEnumerable<CustomerDTO> customers ? TypedResults.Ok(customers) : TypedResults.NotFound()
 );
 
-app.MapPost("/LogIn", async Task<Results<BadRequest<string>, UnauthorizedHttpResult, Ok<UserDTO>>> (ParkAssistContext context, IPasswordHasher passwordHasher, ITokenGenerator tokenGenerator, LogInUserDTO logInUser) =>
+app.MapPost("/LogIn", async Task<Results<BadRequest<string>, UnauthorizedHttpResult, Created<UserDTO>>> (ParkAssistContext context, IPasswordHasher passwordHasher, ITokenGenerator tokenGenerator, LogInUserDTO logInUser) =>
 {
     if (logInUser is null || !(DTOValidators.LogInUserDTOIsValid(logInUser))) { return TypedResults.BadRequest("invalid username or password input"); }
     
@@ -90,7 +90,7 @@ app.MapPost("/LogIn", async Task<Results<BadRequest<string>, UnauthorizedHttpRes
 
         returnUser.Token = token;
 
-        return TypedResults.Ok(returnUser);
+        return TypedResults.Created($"/User/{returnUser.UserId}", returnUser);
     }
 });
 
@@ -126,7 +126,8 @@ app.MapGet("/ParkingSlip", async Task<Results<Ok<IEnumerable<ParkingSlipDTO>>, N
 
 app.MapPost("/Register", async Task<Results<BadRequest<string>, Conflict<string>, Created<UserDTO>>> (ParkAssistContext context, IPasswordHasher passwordHasher, RegisterUserDTO registerUser) =>
 {
-    if (registerUser is null || !(DTOValidators.RegisterUserDTOIsValid(registerUser))) { return TypedResults.BadRequest("invalid username, password, first name, last name, email, or phone input"); }
+    (bool IsValid, string ErrorMessage) validator = DTOValidators.RegisterUserDTOIsValid(registerUser);
+    if (registerUser is null || !validator.IsValid) { return TypedResults.BadRequest(validator.ErrorMessage); }
     
     User existingUser = (await context.Users.SingleOrDefaultAsync(user => user.Username == registerUser.Username))!;
     if (existingUser != null && existingUser.UserId > 0)
@@ -147,6 +148,27 @@ app.MapPost("/Register", async Task<Results<BadRequest<string>, Conflict<string>
         Phone = registerUser.Phone,
         CreateDate = DateTime.Today,        
     };
+
+    if (registerUser.Role == "customer")
+    {
+        addUser.Customer = new();
+    }
+
+    else if (registerUser.Role == "valet")
+    {
+        addUser.Valet = new();
+
+        ParkingLot parkingLot = (await context.ParkingLots.SingleOrDefaultAsync(parkingLot => parkingLot.Id == registerUser.ParkingLotId))!;
+        if (parkingLot != null)
+        {
+            addUser.Valet.ParkingLot = parkingLot;
+        }
+    }
+
+    else if (registerUser.Role == "owner")
+    {
+        addUser.Owner = new();
+    }
 
     context.Users.Add(addUser);
     await context.SaveChangesAsync();
