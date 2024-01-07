@@ -71,7 +71,8 @@ app.MapGet("/Customer", async Task<Results<Ok<IEnumerable<CustomerDTO>>, NotFoun
 
 app.MapPost("/LogIn", async Task<Results<BadRequest<string>, UnauthorizedHttpResult, Created<UserDTO>>> (ParkAssistContext context, IPasswordHasher passwordHasher, ITokenGenerator tokenGenerator, LogInUserDTO logInUser) =>
 {
-    if (logInUser is null || !(DTOValidators.LogInUserDTOIsValid(logInUser))) { return TypedResults.BadRequest("invalid username or password input"); }
+    (bool IsValid, string ErrorMessage) = DTOValidators.LogInUserDTOIsValid(logInUser);
+    if (logInUser is null || !IsValid) { return TypedResults.BadRequest(ErrorMessage); }
 
     User existingUser = (await context.Users.SingleOrDefaultAsync(user => user.Username == logInUser.Username))!;
 
@@ -132,6 +133,16 @@ app.MapPost("/Register", async Task<Results<BadRequest<string>, Conflict<string>
     if (existingUser != null && existingUser.UserId > 0)
     {
         return TypedResults.Conflict("username already taken; choose a different username");
+    }
+    existingUser = (await context.Users.SingleOrDefaultAsync(user => user.Email == registerUser.Email))!;
+    if (existingUser != null && existingUser.UserId > 0)
+    {
+        return TypedResults.Conflict("email already taken; choose a different email");
+    }
+    existingUser = (await context.Users.SingleOrDefaultAsync(user => user.Phone == registerUser.Phone))!;
+    if (existingUser != null && existingUser.UserId > 0)
+    {
+        return TypedResults.Conflict("phone already taken; choose a different phone");
     }
 
     PasswordHash hash = passwordHasher.ComputeHash(registerUser.Password);

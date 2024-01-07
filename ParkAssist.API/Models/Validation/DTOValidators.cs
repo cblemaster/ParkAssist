@@ -6,11 +6,30 @@ namespace ParkAssist.API.Models.Validation
 {
     public static class DTOValidators
     {
-        public static bool LogInUserDTOIsValid(LogInUserDTO logInUser)
+        public static (bool IsValid, string ErrorMessage) LogInUserDTOIsValid(LogInUserDTO logInUser)
         {
+            StringBuilder errorMessage = new();
+
             bool usernameIsValid = GuardClauses.StringContainsChars(logInUser.Username) && GuardClauses.StringLengthInRangeInclusive(1, 50, logInUser.Username);
             bool passwordIsValid = GuardClauses.StringContainsChars(logInUser.Password) && GuardClauses.StringLengthInRangeInclusive(1, 200, logInUser.Password);
-            return usernameIsValid && passwordIsValid;
+
+            bool roleIsValid = GuardClauses.StringContainsChars(logInUser.Role);
+
+            if (!usernameIsValid || !passwordIsValid)
+            {
+                errorMessage.Append("invalid username or password input");
+            }
+
+            if (!roleIsValid)
+            {
+                if (errorMessage.Length > 0)
+                {
+                    errorMessage.Append("; ");
+                }
+                errorMessage.Append("invalid role input");
+            }
+
+            return (usernameIsValid && passwordIsValid && roleIsValid, errorMessage.ToString());
         }
 
         public static (bool IsValid, string ErrorMessage) RegisterUserDTOIsValid(RegisterUserDTO registerUser)
@@ -78,8 +97,8 @@ namespace ParkAssist.API.Models.Validation
                 errorMessage.Append("invalid role input");
             }
 
-            return (usernameIsValid && passwordIsValid && firstNameIsValid
-                && lastNameIsValid && emailIsValid && phoneIsValid, errorMessage.ToString());
+            return (usernameIsValid && passwordIsValid && firstNameIsValid && lastNameIsValid
+                && emailIsValid && phoneIsValid && roleIsValid, errorMessage.ToString());
         }
     }
 }
