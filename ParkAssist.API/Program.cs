@@ -147,17 +147,7 @@ app.MapPost("/Register", async Task<Results<BadRequest<string>, Conflict<string>
 
     PasswordHash hash = passwordHasher.ComputeHash(registerUser.Password);
 
-    User addUser = new()
-    {
-        Username = registerUser.Username,
-        PasswordHash = hash.Password,
-        Salt = hash.Salt,
-        FirstName = registerUser.FirstName,
-        LastName = registerUser.LastName,
-        Email = registerUser.Email,
-        Phone = registerUser.Phone,
-        CreateDate = DateTime.Today,
-    };
+    User addUser = DTOToEntityMappers.MapRegisterUser(registerUser)!;
 
     if (registerUser.Role == "customer")
     {
