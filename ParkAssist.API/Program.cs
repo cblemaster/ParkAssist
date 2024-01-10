@@ -207,4 +207,27 @@ app.MapGet("/Vehicle", async Task<Results<Ok<IEnumerable<VehicleDTO>>, NotFound>
         is IEnumerable<VehicleDTO> vehicles ? TypedResults.Ok(vehicles) : TypedResults.NotFound()
 ).RequireAuthorization("customerpolicy");
 
+app.MapGet("/Customer/{customerId:int}/Vehicle/{vehicleId:int}", async Task<Results<Ok<VehicleDTO>, NotFound>> (ParkAssistContext context, int customerId, int vehicleId) =>
+    EntityToDTOMappers.MapVehicle((await context.Vehicles.SingleOrDefaultAsync(vehicle => vehicle.Id == vehicleId))!)
+        is VehicleDTO vehicle ? TypedResults.Ok(vehicle) : TypedResults.NotFound()
+).RequireAuthorization("customerpolicy");
+
+app.MapGet("/Customer/{customerId:int}/Vehicle", async Task<Results<Ok<IEnumerable<VehicleDTO>>, NotFound>> (ParkAssistContext context, int customerId) =>
+    EntityToDTOMappers.MapVehicles(await context.Vehicles.Where(vehicle => vehicle.CustomerId == customerId).ToListAsync())
+        is IEnumerable<VehicleDTO> vehicles ? TypedResults.Ok(vehicles) : TypedResults.NotFound()
+).RequireAuthorization("customerpolicy");
+
+app.MapPost("/Customer/{customerId:int}/Vehicle", async (ParkAssistContext context, int customerId, VehicleDTO vehicle) =>
+{ }
+).RequireAuthorization("customerpolicy");
+
+app.MapPut("/Customer/{customerId:int}/Vehicle/{vehicleId:int}", async (ParkAssistContext context, int customerId, int vehicleId, VehicleDTO vehicle) =>
+{ }
+).RequireAuthorization("customerpolicy");
+
+app.MapDelete("/Customer/{customerId:int}/Vehicle/{vehicleId:int}", async (ParkAssistContext context, int customerId, int vehicleId) =>
+{ }
+).RequireAuthorization("customerpolicy");
+
+
 app.Run();
