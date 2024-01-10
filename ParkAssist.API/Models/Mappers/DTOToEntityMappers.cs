@@ -45,22 +45,17 @@ namespace ParkAssist.API.Models.Mappers
                     UpdateDate = user.UpdateDate,
                 };
 
-        public static User? MapRegisterUser(RegisterUserDTO registerUser)
-        {
-            if (registerUser == null)
-            {
-                return null;
-            }
-            return new()
-            {
-                Username = registerUser.Username,
-                FirstName = registerUser.FirstName,
-                LastName = registerUser.LastName,
-                Email = registerUser.Email,
-                Phone = registerUser.Phone,
-                CreateDate = DateTime.Today,
-                UpdateDate = null,
-            };
-        }
+        public static User? MapRegisterUser(RegisterUserDTO registerUser) => registerUser == null
+                ? null
+                : new()
+                {
+                    Username = registerUser.Username,
+                    FirstName = registerUser.FirstName,
+                    LastName = registerUser.LastName,
+                    Email = registerUser.Email,
+                    Phone = registerUser.Phone,
+                    CreateDate = DateTime.Today,
+                    UpdateDate = null,
+                };
     }
 }
